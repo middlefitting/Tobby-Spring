@@ -4,7 +4,7 @@ package com.example.springproject.초난감DAO.domain;
  * User.
  *
  * <p>
- *
+ *  User 도메인 객체
  * </p>
  *
  * @author : middlefitting

@@ -12,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
  * UserDao.
  *
  * <p>
- *
+ *  말 그대로 초난감 DAO, JDBC 관리를 직접하기 때문에 테스트 성공을 보장할 수 없다. 트랜잭션 처리가 어렵다
+ *  코드도 객체지향적 코드라고 볼 수가 없다.
  * </p>
  *
  * @author : middlefitting
