@@ -2,8 +2,12 @@ package com.example.springproject.learningtest.junit;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.HashSet;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +24,12 @@ import org.junit.jupiter.api.Test;
  */
 @DisplayName("모든 테스트는 다른 객체를 사용한다.")
 public class EveryTestDifferentObject {
-  private static EveryTestDifferentObject testObject;
+  private static Set<EveryTestDifferentObject> testObject;
+
+  @BeforeAll
+  static void setUp() {
+    testObject = new HashSet<>();
+  }
 
   @Test
   @DisplayName("test1")
@@ -28,8 +37,8 @@ public class EveryTestDifferentObject {
     //Arrange
     //Act
     //Assert
-    assertNotEquals(testObject, this);
-    testObject = this;
+    assertFalse(testObject.contains(this));
+    testObject.add(this);
   }
 
   @Test
@@ -38,8 +47,8 @@ public class EveryTestDifferentObject {
     //Arrange
     //Act
     //Assert
-    assertNotEquals(testObject, this);
-    testObject = this;
+    assertFalse(testObject.contains(this));
+    testObject.add(this);
   }
 
   @Test
@@ -48,7 +57,7 @@ public class EveryTestDifferentObject {
     //Arrange
     //Act
     //Assert
-    assertNotEquals(testObject, this);
-    testObject = this;
+    assertFalse(testObject.contains(this));
+    testObject.add(this);
   }
 }
