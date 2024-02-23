@@ -1,7 +1,4 @@
-package com.example.springproject.section1.section1_5;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+package com.example.springproject.section1.section1_6;
 
 /**
  * DaoFactory.
