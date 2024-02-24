@@ -1,4 +1,4 @@
-package com.example.springproject.section1.section1_5;
+package com.example.springproject.section1.section1_7;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +14,21 @@ import org.springframework.context.annotation.Configuration;
  * @since           : 2024/02/23
  */
 // @Configuration
-public class DaoFactory {
+public class CountingDaoFactory {
 	// 기본적으로 메소드 이름이 빈이 된다.
-	// @Bean
+	@Bean
 	public UserDao userDao() {
 		UserDao userDao = new UserDao(connectionMaker());
 		return userDao;
 	}
 
-	// @Bean
+	@Bean
 	public ConnectionMaker connectionMaker() {
+		return new CountingConnectionMaker(realConnectionMaker());
+	}
+
+	@Bean
+	public ConnectionMaker realConnectionMaker() {
 		return new DConnectionMaker();
 	}
 }

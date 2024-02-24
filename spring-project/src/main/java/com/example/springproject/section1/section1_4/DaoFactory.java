@@ -1,7 +1,7 @@
 package com.example.springproject.section1.section1_4;
 
 /**
- * DaoFactory.
+ * CountingDaoFactory.
  *
  * <p>
  *	UserDao 오브젝트를 어떻게 만들고 준비시킬지 결정
