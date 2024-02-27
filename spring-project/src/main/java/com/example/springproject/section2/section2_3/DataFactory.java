@@ -1,9 +1,8 @@
-package com.example.springproject.section2.section2_2;
+package com.example.springproject.section2.section2_3;
 
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 /**
