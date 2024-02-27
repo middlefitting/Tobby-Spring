@@ -32,8 +32,10 @@ class UserDaoTest {
 	  user.setName("정승철");
 	  user.setPassword("springno1");
 	  dao.add(user);
+	  System.out.println(user.getName() + user.getPassword());
 
 	  User user2 = dao.get("middle");
+	  System.out.println(user2.getName() + user.getPassword());
 	  Assertions.assertThat(user.getId()).isEqualTo(user2.getId());
 	  Assertions.assertThat(user.getName()).isEqualTo(user2.getName());
 	  Assertions.assertThat(user.getPassword()).isEqualTo(user2.getPassword());
