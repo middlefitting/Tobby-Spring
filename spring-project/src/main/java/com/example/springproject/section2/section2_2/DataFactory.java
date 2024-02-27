@@ -1,7 +1,4 @@
-package com.example.springproject.section1.section1_8;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
+package com.example.springproject.section2.section2_2;
 
 import javax.sql.DataSource;
 
@@ -19,7 +16,7 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
  * @author          : middlefitting
  * @since           : 2024/02/24
  */
-// @Configuration
+@Configuration
 public class DataFactory {
 	@Bean
 	public DataSource dataSource() {
