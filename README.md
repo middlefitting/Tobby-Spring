@@ -1,6 +1,7 @@
 # 📖 Tobby-Spring
 
 > 토비의 스프링 학습 기록</br>
+
 <br/>
 
 ## 📖 Index
@@ -19,6 +20,10 @@
 - [Section2_1](src/main/java/com/example/springproject/section2/section2_1/README.md)
 - [Section2_2](src/main/java/com/example/springproject/section2/section2_2/README.md)
 - [Section2_3](src/main/java/com/example/springproject/section2/section2_3/README.md)
+- [Section2_4](src/main/java/com/example/springproject/section2/section2_4/README.md)
+
+
+<br/>
 
 ## 🛠 Work With
 - **[Java11]**
@@ -26,9 +31,9 @@
 - **[MySQL]**
 - **[Javadoc]**
 - **[Junit5]**
-<br/>
-<!-- LIVE DEMO -->
 
+
+<br/>
 
 ## 📝 License
 
