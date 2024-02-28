@@ -26,6 +26,7 @@
 
 ### Section 3
 - [Section3_1](src/main/java/com/example/springproject/section3/section3_1/README.md)
+- [Section3_2](src/main/java/com/example/springproject/section3/section3_2/README.md)
 
 
 <br/>
