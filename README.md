@@ -21,6 +21,8 @@
 - [Section2_2](src/main/java/com/example/springproject/section2/section2_2/README.md)
 - [Section2_3](src/main/java/com/example/springproject/section2/section2_3/README.md)
 - [Section2_4](src/main/java/com/example/springproject/section2/section2_4/README.md)
+- [Section2_5](src/main/java/com/example/springproject/section2/section2_5/README.md)
+- [Section2_6](src/main/java/com/example/springproject/section2/section2_6/README.md)
 
 
 <br/>
