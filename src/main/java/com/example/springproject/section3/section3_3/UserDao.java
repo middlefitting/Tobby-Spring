@@ -1,4 +1,4 @@
-package com.example.springproject.section3.section3_2;
+package com.example.springproject.section3.section3_3;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+
+import com.example.springproject.section3.section3_2.DeleteAllStatement;
+import com.example.springproject.section3.section3_2.StatementStrategy;
 
 import lombok.Setter;
 
@@ -22,7 +25,7 @@ import lombok.Setter;
  * @since           : 2024/02/21
  */
 @Setter
-abstract public class UserDao {
+public class UserDao {
 	// 읽기 전용임을 보장해주자
 	private DataSource dataSource;
 
@@ -34,7 +37,38 @@ abstract public class UserDao {
 	}
 
 	/**
-	 * <br>템플릿 메서드 패턴을 활용<br/>
+	 * <br>로컬 클래스를 활용<br/>
+	 *
+	 *
+	 * @param user
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public void addLocalClass(User user) throws ClassNotFoundException, SQLException {
+		class AddStatement implements StatementStrategy {
+			// private final User user;
+			//
+			// public AddStatement(User user) {
+			// 	this.user = user;
+			// }
+
+			@Override
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+				PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
+				ps.setString(1, user.getId());
+				ps.setString(2, user.getName());
+				ps.setString(3, user.getPassword());
+				return ps;
+			}
+		}
+
+		StatementStrategy st = new AddStatement();
+		jdbcContextWithStatementStrategy(st);
+
+	}
+
+	/**
+	 * <br>익명 클래스를 활용<br/>
 	 *
 	 *
 	 * @param user
@@ -42,17 +76,36 @@ abstract public class UserDao {
 	 * @throws SQLException
 	 */
 	public void add(User user) throws ClassNotFoundException, SQLException {
-		Connection c = dataSource.getConnection();
-		PreparedStatement ps = c.prepareStatement(
-			"insert into users(id, name, password) values(?,?,?)");
-		ps.setString(1, user.getId());
-		ps.setString(2, user.getName());
-		ps.setString(3, user.getPassword());
+		StatementStrategy st = new StatementStrategy() {
+			@Override
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+				PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
+				ps.setString(1, user.getId());
+				ps.setString(2, user.getName());
+				ps.setString(3, user.getPassword());
+				return ps;
+			}
+		};
+		jdbcContextWithStatementStrategy(st);
+	}
 
-		ps.executeUpdate();
-
-		ps.close();
-		c.close();
+	/**
+	 * <br>람다를 활용<br/>
+	 *
+	 *
+	 * @param user
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public void addLambda(User user) throws ClassNotFoundException, SQLException {
+		StatementStrategy st = c -> {
+			PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
+			ps.setString(1, user.getId());
+			ps.setString(2, user.getName());
+			ps.setString(3, user.getPassword());
+			return ps;
+		};
+		jdbcContextWithStatementStrategy(st);
 	}
 
 	public User get(String id) throws ClassNotFoundException, SQLException {
@@ -80,103 +133,44 @@ abstract public class UserDao {
 	}
 
 	/**
-	 * <p>자원을 안전하게 반환하도록 try/catch 블록을 사용 </p>
-	 * 템플릿 콜백 패턴 사용
+	 * 메소드로 분리한 컨텍스트 코드
+	 * @throws SQLException
+	 */
+	public void jdbcContextWithStatementStrategy(
+		com.example.springproject.section3.section3_2.StatementStrategy stmt) throws SQLException {
+		Connection c = null;
+		PreparedStatement ps = null;
+		try {
+			c = dataSource.getConnection();
+			ps = stmt.makePreparedStatement(c);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+
+				}
+			}
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	/**
+	 * 클라이언트 책임을 갖도록 재구성
 	 * @throws SQLException
 	 */
 	public void deleteAll() throws SQLException {
-		Connection c = null;
-		PreparedStatement ps = null;
-		try {
-			ps = makeStatement(c);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-
-				}
-			}
-			if (c != null) {
-				try {
-					c.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-	}
-
-	/**
-	 * 전략 패턴을 적용한 deleteAll
-	 * @throws SQLException
-	 */
-	public void deleteAllWithStrategy() throws SQLException {
-		Connection c = null;
-		PreparedStatement ps = null;
-		try {
-			StatementStrategy strategy = new DeleteAllStatement();
-			ps = strategy.makePreparedStatement(c);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-
-				}
-			}
-			if (c != null) {
-				try {
-					c.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-	}
-
-	/**
-	 * 메소드로 분리한 컨텍스트 코드, 의존관계 객체 1, 객체 2는 전략이 된다.
-	 * @throws SQLException
-	 */
-	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-		Connection c = null;
-		PreparedStatement ps = null;
-		try {
-			ps = stmt.makePreparedStatement(c);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			if (ps != null) {
-				try {
-					c = dataSource.getConnection();
-					ps = stmt.makePreparedStatement(c);
-					ps.executeUpdate();
-				} catch (SQLException e) {
-
-				}
-			}
-			if (c != null) {
-				try {
-					c.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-	}
-
-	/**
-	 * 클라이언트 책임을 갖도록 재구성, (클라이언트와 오브젝트 팩토리의 역할)
-	 * @throws SQLException
-	 */
-	public void deleteAllClient() throws SQLException {
 		StatementStrategy st = new DeleteAllStatement();
 		jdbcContextWithStatementStrategy(st);
 	}
-
-	abstract protected PreparedStatement makeStatement(Connection c) throws SQLException;
 
 	/**
 	 * 만들어준 ResultSet도 닫아주기, close 는 생성의 역순으로 하는 것이 원칙
